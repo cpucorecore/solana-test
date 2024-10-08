@@ -256,9 +256,9 @@
     "@babel/helper-plugin-utils" "^7.25.7"
 
 "@babel/runtime@^7.25.0":
-  version "7.25.6"
-  resolved "https://registry.npmjs.org/@babel/runtime/-/runtime-7.25.6.tgz"
-  integrity sha512-VBj9MYyDb9tuLq7yzqjgzt6Q+IBQLrGZfdjOekyEirZPHxXWoTSGUTMrpsfi58Up73d13NfYLv8HT9vmznjzhQ==
+  version "7.25.7"
+  resolved "https://registry.npmjs.org/@babel/runtime/-/runtime-7.25.7.tgz"
+  integrity sha512-FjoyLe754PMiYsFaN5C94ttGiOmBNYTf6pLr4xXHAT5uctHb092PBszndLDR5XA/jghQvn4n7JMHl7dmTgbm9w==
   dependencies:
     regenerator-runtime "^0.14.0"
 
@@ -569,6 +569,11 @@
   dependencies:
     "@sinonjs/commons" "^3.0.0"
 
+"@solana-program/system@^0.5.2":
+  version "0.5.2"
+  resolved "https://registry.npmjs.org/@solana-program/system/-/system-0.5.2.tgz"
+  integrity sha512-l5JgJScheEksjz1sFV2q5sCQ1Ia3m5uFIVJa2MOZelz0rRLe1PUhb/Cihba6wsUZmWd2pSEk8V1Br1zaJRjbzA==
+
 "@solana/buffer-layout@^4.0.1":
   version "4.0.1"
   resolved "https://registry.npmjs.org/@solana/buffer-layout/-/buffer-layout-4.0.1.tgz"
@@ -576,7 +581,7 @@
   dependencies:
     buffer "~6.0.3"
 
-"@solana/web3.js@^1.68.0", "@solana/web3.js@^1.95.3":
+"@solana/web3.js@1.95.3", "@solana/web3.js@2.0.0-rc.1":
   version "1.95.3"
   resolved "https://registry.npmjs.org/@solana/web3.js/-/web3.js-1.95.3.tgz"
   integrity sha512-O6rPUN0w2fkNqx/Z3QJMB9L225Ex10PRDH8bTaIUPZXMPV0QP8ZpPvjQnXK+upUczlRgzHzd6SjKIha1p+I6og==
@@ -2275,30 +2280,6 @@ slash@^3.0.0:
   version "3.0.0"
   resolved "https://registry.npmjs.org/slash/-/slash-3.0.0.tgz"
   integrity sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==
-
-solana-bankrun-darwin-universal@0.3.1:
-  version "0.3.1"
-  resolved "https://registry.npmjs.org/solana-bankrun-darwin-universal/-/solana-bankrun-darwin-universal-0.3.1.tgz"
-  integrity sha512-muGHpVYWT7xCd8ZxEjs/bmsbMp8XBqroYGbE4lQPMDUuLvsJEIrjGqs3MbxEFr71sa58VpyvgywWd5ifI7sGIg==
-
-solana-bankrun-darwin-x64@0.3.1:
-  version "0.3.1"
-  resolved "https://registry.npmjs.org/solana-bankrun-darwin-x64/-/solana-bankrun-darwin-x64-0.3.1.tgz"
-  integrity sha512-oCaxfHyt7RC3ZMldrh5AbKfy4EH3YRMl8h6fSlMZpxvjQx7nK7PxlRwMeflMnVdkKKp7U8WIDak1lilIPd3/lg==
-
-solana-bankrun@^0.3.1:
-  version "0.3.1"
-  resolved "https://registry.npmjs.org/solana-bankrun/-/solana-bankrun-0.3.1.tgz"
-  integrity sha512-inRwON7fBU5lPC36HdEqPeDg15FXJYcf77+o0iz9amvkUMJepcwnRwEfTNyMVpVYdgjTOBW5vg+596/3fi1kGA==
-  dependencies:
-    "@solana/web3.js" "^1.68.0"
-    bs58 "^4.0.1"
-  optionalDependencies:
-    solana-bankrun-darwin-arm64 "0.3.1"
-    solana-bankrun-darwin-universal "0.3.1"
-    solana-bankrun-darwin-x64 "0.3.1"
-    solana-bankrun-linux-x64-gnu "0.3.1"
-    solana-bankrun-linux-x64-musl "0.3.1"
 
 source-map-support@0.5.13:
   version "0.5.13"

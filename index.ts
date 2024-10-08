@@ -1,35 +1,59 @@
-import { PROGRAM_ID } from './ts';
-import {start} from "solana-bankrun";
-import {ProgramCounter} from "./src/ProgramCounter";
+import {COUNTER_ACCOUNT_SIZE, deserializeCounterAccount, PROGRAM_ID} from './ts';
 import {loadKeypair} from "./src/KeypairFileLoader";
-import {SolanaClient} from "./src/SolanaClient";
-import {CounterCreator} from "./src/CounterCreator";
-import {CounterCaller} from "./src/CounterCaller";
+import {Connection, SystemProgram, Transaction, TransactionMessage, VersionedTransaction} from '@solana/web3.js';
+
 
 (async () => {
-    const context = await start([{ name: 'counter_solana_native', programId: PROGRAM_ID }], []);
-    const client = context.banksClient;
-    const rent = await client.getRent();
-    const solanaClient = new SolanaClient(context, rent);
+    const connection = new Connection('http://127.0.0.1:8899');
+    const payer = await loadKeypair("./payer.json");
+    console.log(payer.publicKey.toString());
+    const counterKeypair = await loadKeypair("./counter.json")
+    let  accountInfo = await connection.getAccountInfo(counterKeypair.publicKey);
+    console.log(accountInfo);
+    if (accountInfo) {
+        const counterAccount = deserializeCounterAccount(Buffer.from(accountInfo.data));
+        console.log(`[alloc+increment] count is: ${counterAccount.count.toNumber()}`);
+    }
 
-    const counterKeypair = loadKeypair("./counter.json")
-    const programCounter = new ProgramCounter(solanaClient, PROGRAM_ID, counterKeypair);
 
-    let counterCreator = new CounterCreator(solanaClient, programCounter)
+    const exemptionBalance = await connection.getMinimumBalanceForRentExemption(COUNTER_ACCOUNT_SIZE);
+    const allocIx = SystemProgram.createAccount({
+        fromPubkey: payer.publicKey,
+        newAccountPubkey: counterKeypair.publicKey,
+        lamports: exemptionBalance,
+        space: COUNTER_ACCOUNT_SIZE,
+        programId: PROGRAM_ID,
+    });
 
-    await programCounter.getState()
-    await counterCreator.createDataAccount()
-    await programCounter.getState()
+    const lastBlockHash = await connection.getLatestBlockhash()
+    // let tx = new Transaction().add(allocIx);
+    // tx.feePayer = payer.publicKey
+    // tx.recentBlockhash = lastBlockHash.blockhash
+    //
+    // tx.sign(payer, counterKeypair);
 
-    let counterCaller = new CounterCaller(solanaClient, programCounter);
-    await counterCaller.callContract()
-    await programCounter.getState()
+    const instructions = [
+        allocIx
+    ];
+    const msg = new TransactionMessage({
+        payerKey:payer.publicKey,
+        recentBlockhash: lastBlockHash.blockhash,
+        instructions,
+    }).compileToV0Message();
 
-    console.log("begin sleep")
-    await sleep(2000)
-    console.log("end sleep")
-    await counterCaller.callContract()
-    await programCounter.getState()
+
+    const t = new VersionedTransaction(msg);
+    t.sign([payer, counterKeypair])
+    const sb = await connection.sendTransaction(t);
+    console.log(sb)
+
+      accountInfo = await connection.getAccountInfo(counterKeypair.publicKey);
+    console.log(accountInfo);
+    if (accountInfo) {
+        const counterAccount = deserializeCounterAccount(Buffer.from(accountInfo.data));
+        console.log(`[alloc+increment] count is: ${counterAccount.count.toNumber()}`);
+    }
+
 })();
 
 function sleep(ms: number): Promise<void> {

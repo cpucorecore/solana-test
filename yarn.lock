@@ -569,11 +569,6 @@
   dependencies:
     "@sinonjs/commons" "^3.0.0"
 
-"@solana-program/system@^0.5.2":
-  version "0.5.2"
-  resolved "https://registry.npmjs.org/@solana-program/system/-/system-0.5.2.tgz"
-  integrity sha512-l5JgJScheEksjz1sFV2q5sCQ1Ia3m5uFIVJa2MOZelz0rRLe1PUhb/Cihba6wsUZmWd2pSEk8V1Br1zaJRjbzA==
-
 "@solana/buffer-layout@^4.0.1":
   version "4.0.1"
   resolved "https://registry.npmjs.org/@solana/buffer-layout/-/buffer-layout-4.0.1.tgz"
@@ -581,7 +576,7 @@
   dependencies:
     buffer "~6.0.3"
 
-"@solana/web3.js@1.95.3", "@solana/web3.js@2.0.0-rc.1":
+"@solana/web3.js@1.95.3":
   version "1.95.3"
   resolved "https://registry.npmjs.org/@solana/web3.js/-/web3.js-1.95.3.tgz"
   integrity sha512-O6rPUN0w2fkNqx/Z3QJMB9L225Ex10PRDH8bTaIUPZXMPV0QP8ZpPvjQnXK+upUczlRgzHzd6SjKIha1p+I6og==

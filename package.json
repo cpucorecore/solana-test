@@ -10,7 +10,6 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@solana-program/system": "^0.5.2",
     "@solana/web3.js": "1.95.3"
   },
   "devDependencies": {

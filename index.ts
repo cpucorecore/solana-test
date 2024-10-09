@@ -1,59 +1,27 @@
-import {COUNTER_ACCOUNT_SIZE, deserializeCounterAccount, PROGRAM_ID} from './ts';
 import {loadKeypair} from "./src/KeypairFileLoader";
-import {Connection, SystemProgram, Transaction, TransactionMessage, VersionedTransaction} from '@solana/web3.js';
-
+import {Connection} from '@solana/web3.js';
+import {Counter} from "./src/Counter";
 
 (async () => {
     const connection = new Connection('http://127.0.0.1:8899');
-    const payer = await loadKeypair("./payer.json");
-    console.log(payer.publicKey.toString());
-    const counterKeypair = await loadKeypair("./counter.json")
-    let  accountInfo = await connection.getAccountInfo(counterKeypair.publicKey);
-    console.log(accountInfo);
-    if (accountInfo) {
-        const counterAccount = deserializeCounterAccount(Buffer.from(accountInfo.data));
-        console.log(`[alloc+increment] count is: ${counterAccount.count.toNumber()}`);
+    const payerKeypair = loadKeypair("./keys/payer.json");
+    const counterKeypair = loadKeypair("./keys/counter.json");
+    console.log(`payer: ${payerKeypair.publicKey}`);
+    console.log(`counterKeypair: ${counterKeypair.publicKey}`);
+
+    const counter = new Counter(connection, payerKeypair, counterKeypair);
+
+    await counter.dumpCounter();
+    if (await counter.counterExist()) {
+        for (let i = 0; i < 10; i++) {
+            await counter.callContract();
+            await sleep(500);
+        }
+    } else {
+        await counter.createDataAccount();
     }
 
-
-    const exemptionBalance = await connection.getMinimumBalanceForRentExemption(COUNTER_ACCOUNT_SIZE);
-    const allocIx = SystemProgram.createAccount({
-        fromPubkey: payer.publicKey,
-        newAccountPubkey: counterKeypair.publicKey,
-        lamports: exemptionBalance,
-        space: COUNTER_ACCOUNT_SIZE,
-        programId: PROGRAM_ID,
-    });
-
-    const lastBlockHash = await connection.getLatestBlockhash()
-    // let tx = new Transaction().add(allocIx);
-    // tx.feePayer = payer.publicKey
-    // tx.recentBlockhash = lastBlockHash.blockhash
-    //
-    // tx.sign(payer, counterKeypair);
-
-    const instructions = [
-        allocIx
-    ];
-    const msg = new TransactionMessage({
-        payerKey:payer.publicKey,
-        recentBlockhash: lastBlockHash.blockhash,
-        instructions,
-    }).compileToV0Message();
-
-
-    const t = new VersionedTransaction(msg);
-    t.sign([payer, counterKeypair])
-    const sb = await connection.sendTransaction(t);
-    console.log(sb)
-
-      accountInfo = await connection.getAccountInfo(counterKeypair.publicKey);
-    console.log(accountInfo);
-    if (accountInfo) {
-        const counterAccount = deserializeCounterAccount(Buffer.from(accountInfo.data));
-        console.log(`[alloc+increment] count is: ${counterAccount.count.toNumber()}`);
-    }
-
+    await counter.dumpCounter();
 })();
 
 function sleep(ms: number): Promise<void> {
